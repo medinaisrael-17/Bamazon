@@ -25,6 +25,39 @@ function showItems() {
         if (err) throw err;
 
         console.table(res);
+        menu();
+    })
+
+}
+
+function menu() {
+    inquirer
+    .prompt([
+        {
+            // * The first should ask them the ID of the product they would like to buy
+            name: "id",
+            message: "Enter the ID number of the item you wish to buy",
+            validate: function(value) {
+                if (isNaN(value) === false) {
+                    return true;
+                }
+                return false;
+            }
+        },
+        {
+            // * The second message should ask how many units of the product they would like to buy
+            name: "quantity",
+            message: "How many units do you want of that item?",
+            validate: function(value) {
+                if (isNaN(value) === false) {
+                    return true;
+                }
+                return false;
+            }
+        }
+    ])
+    .then(function(answer){
+        var chosenItem;
     })
 }
 
