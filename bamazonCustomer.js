@@ -31,33 +31,67 @@ function showItems() {
 }
 
 function menu() {
-    inquirer
-    .prompt([
-        {
-            // * The first should ask them the ID of the product they would like to buy
-            name: "id",
-            message: "Enter the ID number of the item you wish to buy",
-            validate: function(value) {
-                if (isNaN(value) === false) {
-                    return true;
+    connection.query("SELECT * FROM products", function(err, results){
+        if (err) throw err;
+
+        inquirer
+        .prompt([
+            {
+                // * The first should ask them the ID of the product they would like to buy
+                name: "id",
+                message: "Enter the ID number of the item you wish to buy",
+                validate: function(value) {
+                    if (isNaN(value) === false) {
+                        return true;
+                    }
+                    return false;
                 }
-                return false;
-            }
-        },
-        {
-            // * The second message should ask how many units of the product they would like to buy
-            name: "quantity",
-            message: "How many units do you want of that item?",
-            validate: function(value) {
-                if (isNaN(value) === false) {
-                    return true;
+            },
+            {
+                // * The second message should ask how many units of the product they would like to buy
+                name: "quantity",
+                message: "How many would you like to buy?",
+                validate: function(value) {
+                    if (isNaN(value) === false) {
+                        return true;
+                    }
+                    return false;
                 }
-                return false;
             }
-        }
-    ])
-    .then(function(answer){
-        var chosenItem;
-    })
-}
+        ])
+        .then(function(answer){
+            console.log("\n");
+            var chosenItem;
+            for (var i = 0; i < results.length; i++) {
+                if (results[i].id === parseInt(answer.id)) {
+                    chosenItem = results[i];
+                }
+            }
+
+            if (parseInt(answer.quantity) < chosenItem.stock_quantity) {
+                newQuantity = chosenItem.stock_quantity - parseInt(answer.quantity);
+                connection.query(
+                    "UPDATE products SET ? WHERE ?",
+                    [
+                        {
+                            stock_quantity: newQuantity
+                        },
+                        {
+                            id: chosenItem.id
+                        }
+                    ],
+                    function(error) {
+                        if (error) throw error;
+                        console.log("Purchase was successful!");
+                        showItems();
+                    }
+                );
+            }
+            else {
+                console.log("Sorry we do not have enough items to meet your request");
+                showItems();
+            }
+        });
+    });
+}  
 
