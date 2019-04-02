@@ -13,3 +13,18 @@ var connection = mysql.createConnection({
     database: "bamazon_db"
 });
 
+connection.connect(function(err) {
+    if (err) throw err;
+
+    showItems();
+})
+
+function showItems() {
+    console.log("\nDisplaying all products...\n");
+    connection.query("SELECT * FROM products", function(err, res) {
+        if (err) throw err;
+
+        console.table(res);
+    })
+}
+
