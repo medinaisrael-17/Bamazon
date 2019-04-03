@@ -31,7 +31,7 @@ function menu(){
             viewProducts();
         }
         else if (answer.choice === "View Low Inventory") {
-            // viewLowInventory();
+            viewLowInventory();
         }
         else if (answer.choice === "Add to Inventory") {
             // addToInventory();
@@ -54,4 +54,15 @@ function viewProducts() {
         console.table(res);
         menu();
     })
+}
+
+function viewLowInventory() {
+    console.log("\nDisplaying low inventory...\n");
+    connection.query("SELECT * FROM products WHERE stock_quantity < 5", function(err, res) {
+        if (err) throw err;
+
+        console.table(res);
+        menu();
+    })
+
 }
