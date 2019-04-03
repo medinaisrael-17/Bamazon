@@ -68,7 +68,7 @@ function menu() {
                 }
             }
 
-            if (parseInt(answer.quantity) < chosenItem.stock_quantity) {
+            if (parseInt(answer.quantity) <= chosenItem.stock_quantity) {
                 var newQuantity = chosenItem.stock_quantity - parseInt(answer.quantity);
                 connection.query(
                     "UPDATE products SET ? WHERE ?",
