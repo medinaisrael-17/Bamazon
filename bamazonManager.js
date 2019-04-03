@@ -28,7 +28,7 @@ function menu(){
         choices: ["View Products", "View Low Inventory", "Add to Inventory", "Add New Product", "Exit"]
     }).then(function(answer){
         if (answer.choice === "View Products") {
-            // viewProducts();
+            viewProducts();
         }
         else if (answer.choice === "View Low Inventory") {
             // viewLowInventory();
@@ -44,4 +44,14 @@ function menu(){
         }
     })
 
+}
+
+function viewProducts() {
+    console.log("\nDisplaying all products...\n");
+    connection.query("SELECT * FROM products", function(err, res){
+        if (err) throw err;
+
+        console.table(res);
+        menu();
+    })
 }
