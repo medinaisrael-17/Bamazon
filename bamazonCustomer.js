@@ -32,7 +32,6 @@ function showItems() {
 
 function menu() {
     connection.query("SELECT * FROM products", function(err, results){
-        co
         if (err) throw err;
 
         inquirer
@@ -40,7 +39,7 @@ function menu() {
             {
                 // * The first should ask them the ID of the product they would like to buy
                 name: "id",
-                message: "Enter the ID number of the item you wish to buy",
+                message: "Enter the ID number of the item you wish to buy.",
                 validate: function(value) {
                     if (isNaN(value) === false) {
                         return true;
@@ -70,7 +69,7 @@ function menu() {
             }
 
             if (parseInt(answer.quantity) < chosenItem.stock_quantity) {
-                newQuantity = chosenItem.stock_quantity - parseInt(answer.quantity);
+                var newQuantity = chosenItem.stock_quantity - parseInt(answer.quantity);
                 connection.query(
                     "UPDATE products SET ? WHERE ?",
                     [

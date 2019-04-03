@@ -21,6 +21,7 @@ connection.connect(function(err) {
 })
 
 function menu(){
+    console.log("\n");
     inquirer.prompt({
         name: "choice",
         type: "list",
@@ -34,7 +35,7 @@ function menu(){
             viewLowInventory();
         }
         else if (answer.choice === "Add to Inventory") {
-            // addToInventory();
+            addToInventory();
         }
         else if (answer.choice === "Add New Product") {
             // addNewProduct();
@@ -63,6 +64,66 @@ function viewLowInventory() {
 
         console.table(res);
         menu();
+    })
+
+}
+
+function addToInventory() {
+    connection.query("SELECT * FROM products", function(err, results) {
+        if (err) throw err;
+
+        inquirer.prompt([
+            {
+                name: "id",
+                message: "Enter the ID number of the item you wish to add to.",
+                validate: function(value) {
+                    if (isNaN(value) === false) {
+                        return true;
+                    }
+                    return false; 
+                }
+            },
+            {
+                name: "quantity",
+                message: "How many units would you like to add?",
+                validate: function(value) {
+                    if (isNaN(value) === false) {
+                        return true;
+                    }
+                    return false;
+                }
+            }
+        ])
+        .then(function(answer){
+            console.log("\n");
+            var chosenItem;
+            for (var i = 0; i < results.length; i++){
+                if (results[i].id === parseInt(answer.id)) {
+                    chosenItem = results[i];
+                }
+            }
+
+            var newQuantity = chosenItem.stock_quantity + parseInt(answer.quantity);
+            connection.query(
+                "UPDATE products SET ? WHERE ?",
+                [
+                    {
+                        stock_quantity: newQuantity
+                    },
+                    {
+                        id: chosenItem.id
+                    }
+                ],
+                function(error) {
+                    if (error) throw error;
+                    console.log("Successfully updated the inventory!");
+                    console.log("You added " + parseInt(answer.quantity) + " units to " +
+                    chosenItem.product_name + "\n");
+
+                    menu();
+                }
+            )
+        })
     })
 
 }
