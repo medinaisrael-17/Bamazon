@@ -32,6 +32,7 @@ function showItems() {
 
 function menu() {
     connection.query("SELECT * FROM products", function(err, results){
+        co
         if (err) throw err;
 
         inquirer
@@ -83,13 +84,40 @@ function menu() {
                     function(error) {
                         if (error) throw error;
                         console.log("Purchase was successful!");
-                        showItems();
+                        var totalSpent = parseInt(answer.quantity) * parseInt(chosenItem.price)
+                        console.log("You spent $" + totalSpent + "\n");
+                        inquirer.prompt({
+                            name: "continue",
+                            type: "list",
+                            message: "Would you like to [purchase] again or [exit]?",
+                            choices: ["PURCHASE", "EXIT"]
+                        }).then(function(answer){
+                            if (answer.continue === "PURCHASE") {
+                                showItems();
+                            }
+                            else if(answer.continue === "EXIT") {
+                                connection.end();
+                            }
+                        })
+                        
                     }
                 );
             }
             else {
-                console.log("Sorry we do not have enough items to meet your request");
-                showItems();
+                console.log("Insufficient Quantity!\n");
+                inquirer.prompt({
+                    name: "continue",
+                    type: "list",
+                    message: "Would you like to try to [purchase] again or [exit]?",
+                    choices: ["PURCHASE", "EXIT"]
+                }).then(function(answer){
+                    if (answer.continue === "PURCHASE") {
+                        showItems();
+                    }
+                    else if(answer.continue === "EXIT") {
+                        connection.end();
+                    }
+                })
             }
         });
     });
