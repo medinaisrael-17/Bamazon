@@ -105,9 +105,31 @@ Each one has their own set of instructions to allow the "manager" to update the 
 
 The view products option is similar to way ```bamazonCustomer.js``` starts. It will show all the content that is in the databse in a table structure. 
 
+![bamazon manager view products](./images/bamazonManager2.png "bamazon manager view products")
 
 
 #### View Low Inventory 
+
+This option is very helpful to managers. It will connect to the databse and only select items from the databse where an item has less than 5 items in stock. 
+
+```javascript
+function viewLowInventory() {
+    console.log(chalk.red("\nDisplaying low inventory...\n"));
+    connection.query("SELECT * FROM products WHERE stock_quantity < 5", function (err, res) {
+        if (err) throw err;
+
+        console.table(res);
+        menu();
+    })
+
+}
+```
+
+The items appear in a clean, easy to read format that allow the manager to quickly identify which items are low in stock. 
+
+![bamazon manager low](./images/bamazonManager3.png "bamazon manager low")
+
+Also, after each function, the user is asked what they would like to do next through inquirer.
 
 #### Add to Inventory 
 
