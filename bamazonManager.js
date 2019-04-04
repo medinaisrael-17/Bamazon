@@ -1,6 +1,7 @@
 var mysql = require("mysql");
 var inquirer = require("inquirer");
-const cTable = require('console.table');
+const cTable = require("console.table");
+var chalk = require("chalk");
 
 var connection = mysql.createConnection({
     host: "localhost",
@@ -48,7 +49,7 @@ function menu() {
 }
 
 function viewProducts() {
-    console.log("\nDisplaying all products...\n");
+    console.log(chalk.cyan("\nDisplaying all products...\n"));
     connection.query("SELECT * FROM products", function (err, res) {
         if (err) throw err;
 
@@ -58,7 +59,7 @@ function viewProducts() {
 }
 
 function viewLowInventory() {
-    console.log("\nDisplaying low inventory...\n");
+    console.log(chalk.red("\nDisplaying low inventory...\n"));
     connection.query("SELECT * FROM products WHERE stock_quantity < 5", function (err, res) {
         if (err) throw err;
 
@@ -116,9 +117,9 @@ function addToInventory() {
                     ],
                     function (error) {
                         if (error) throw error;
-                        console.log("Successfully updated the inventory!");
-                        console.log("You added " + parseInt(answer.quantity) + " units to " +
-                            chosenItem.product_name + "\n");
+                        console.log(chalk.green("Successfully") +  " updated the inventory!");
+                        console.log("You added " + chalk.yellow(parseInt(answer.quantity)) + " units to " +
+                            chalk.yellow(chosenItem.product_name) + "\n");
 
                         menu();
                     }
@@ -129,7 +130,7 @@ function addToInventory() {
 }
 
 function addNewProduct() {
-    console.log("\nInserting a new product...\n")
+    console.log(chalk.magenta("\nInserting a new product...\n"))
 
     inquirer.prompt([
         {
@@ -163,7 +164,7 @@ function addNewProduct() {
     ]).then(function (answer) {
         console.log("\n");
 
-        console.log("Adding " + answer.product_name + " to the database\n");
+        console.log("Adding " + chalk.magenta(answer.product_name) + " to the database\n");
 
         connection.query(
             "INSERT INTO products SET ?",
@@ -176,7 +177,7 @@ function addNewProduct() {
             function(err, res){
                 if (err) throw err;
 
-                console.log(res.affectedRows + " product inserted!\n");
+                console.log(chalk.blueBright(res.affectedRows) + " product inserted!\n");
                 menu();
 
             }
