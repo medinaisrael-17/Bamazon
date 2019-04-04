@@ -82,7 +82,25 @@ Next, I run a function called ```menu()``` that starts an inquirer to see what t
 
 After this, the amount they want to buy is evaluated. If the amount they wish to purchase is less than or equal to the amount in stock, the user is allowed to purchase the item. Otherwise, they are asking for too many of that item and we must display that we do not have enough to meet their request. 
 
-Whether they made a purchase, or were told about an insuffciency, the user is asked if they would like to make another purchase or if they want to exit.
+Whether they made a purchase, or were told about an insuffciency, the user is asked if they would like to make another purchase or if they want to exit. The database is updated each time the user makes a purchase, allowing for real time interactions and up to date data 
+
+```javascript
+if (parseInt(answer.quantity) <= chosenItem.stock_quantity) {
+                //the new quantity will be calculated
+                var newQuantity = chosenItem.stock_quantity - parseInt(answer.quantity);
+                //connect back to the database
+                connection.query(
+                    //what we want to update
+                    "UPDATE products SET ? WHERE ?",
+                    [
+                        {
+                            stock_quantity: newQuantity
+                        },
+                        {
+                            id: chosenItem.id
+                        }
+                    ],
+```
 
 ![bamazon customer](./images/bamazonCustomer.png "bamazon customer")
 ![bamazon customer success](./images/bamazonCustomer1.png "bamazon customer success")
@@ -133,7 +151,72 @@ Also, after each function, the user is asked what they would like to do next thr
 
 #### Add to Inventory 
 
+The user also has an option to add to the stock of each item. This is often paired with the ```View Low Inventory``` function as it allows the user to add inventory and update the database at the same time. 
+
+When you first select it, an inquirer is pulled up asking for the item's unique id and how much of the item you would like to add. 
+
+![bamazon manager add inventory](./images/bamazonManager4.png "bamazon manager add inventory")
+
+Afterwards, it shows a "success" message, along with how many units you added to that id. 
+
+![bamazon manager added](./images/bamazonManager5.png "bamazon manager added")
+
 #### Add New Product 
+
+This last function will add a new product into the databse for customers to view and buy. Each item has name, department, price, and stock quantity that must be filled in in order to add it to our database. Inquirer asks for each of these parameters and then uses the answers given to add it to mysql. 
+
+```javascript
+inquirer.prompt([
+        {
+            name: "product_name",
+            message: "What is the products name?",
+        },
+        {
+            name: "department_name",
+            message: "What department will it be in?"
+        },
+        {
+            name: "price",
+            message: "How much does it cost?",
+            validate: function (value) {
+                if (isNaN(value) === false) {
+                    return true;
+                }
+                return false;
+            }
+        },
+        {
+            name: "stock_quantity",
+            message: "How many units do you have of this item?",
+            validate: function (value) {
+                if (isNaN(value) === false) {
+                    return true;
+                }
+                return false;
+            }
+        }
+```
+
+Using a query, we can easily connect and add it to our database.
+
+```javascript
+connection.query(
+            "INSERT INTO products SET ?",
+            {
+                product_name: answer.product_name,
+                department_name: answer.department_name,
+                price: answer.price,
+                stock_quantity: answer.stock_quantity
+            }
+```
+
+Heres what the process looks like.
+
+![bamazon manager added product](./images/bamazonManager6.png "bamazon manager added product")
+
+We can see that it has been added to our database and can now be viewed by the manager and customers.
+
+![bamazon manager added product render](./images/bamazonManager7.png "bamazon manager added product render")
 
 #### Exit 
 
