@@ -1,6 +1,8 @@
 var mysql = require("mysql");
 var inquirer = require("inquirer");
-const cTable = require('console.table');
+const cTable = require("console.table");
+var chalk = require("chalk");
+
 
 var connection = mysql.createConnection({
     host: "localhost",
@@ -20,7 +22,7 @@ connection.connect(function(err) {
 })
 
 function showItems() {
-    console.log("\nDisplaying all products...\n");
+    console.log(chalk.cyan("\nDisplaying all products...\n"));
     connection.query("SELECT * FROM products", function(err, res) {
         if (err) throw err;
 
@@ -82,9 +84,9 @@ function menu() {
                     ],
                     function(error) {
                         if (error) throw error;
-                        console.log("Purchase was successful!");
+                        console.log("Purchase was " + chalk.green("successful!"));
                         var totalSpent = parseInt(answer.quantity) * parseInt(chosenItem.price)
-                        console.log("You spent $" + totalSpent + "\n");
+                        console.log("You spent " + chalk.yellow("$" + totalSpent + "\n"));
                         inquirer.prompt({
                             name: "continue",
                             type: "list",
@@ -103,7 +105,7 @@ function menu() {
                 );
             }
             else {
-                console.log("Insufficient Quantity!\n");
+                console.log(chalk.red("Insufficient Quantity!\n"));
                 inquirer.prompt({
                     name: "continue",
                     type: "list",
