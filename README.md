@@ -220,3 +220,11 @@ We can see that it has been added to our database and can now be viewed by the m
 
 #### Exit 
 
+The ```Exit``` function is an option in the menu that allows the user to exit the program.
+
+```javascript
+else if (answer.choice === "Exit") {
+            connection.end();
+        }
+```
+
