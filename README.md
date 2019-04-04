@@ -51,7 +51,7 @@ function showItems() {
 }
 ```
 
-Next I run a function called ```menu()`` that starts an inquirer to see what the user would like to purchase.
+Next, I run a function called ```menu()``` that starts an inquirer to see what the user would like to purchase.
 
 ```javascript
  //inquirer asks for specific information
