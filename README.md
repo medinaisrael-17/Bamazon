@@ -88,3 +88,30 @@ Whether they made a purchase, or were told about an insuffciency, the user is as
 ![bamazon customer success](./images/bamazonCustomer1.png "bamazon customer success")
 ![bamazon customer failure](./images/bamazonCustomer2.png "bamazon customer failure")
 
+## Bamazon Manager
+Bamazon manager allows the user to act as a manager for the company. In this file there are a few choices to choose from after we establish a connection to the database:
+
+* View Products 
+* View Low Inventory
+* Add to Inventory 
+* Add New Product 
+* Exit
+
+![bamazon manager menu](./images/bamazonManager1.png "bamazon manager menu")
+
+Each one has their own set of instructions to allow the "manager" to update the database.
+
+#### View Products 
+
+The view products option is similar to way ```bamazonCustomer.js``` starts. It will show all the content that is in the databse in a table structure. 
+
+
+
+#### View Low Inventory 
+
+#### Add to Inventory 
+
+#### Add New Product 
+
+#### Exit 
+
